@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prescription Scan | AyurAI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --porcelain: #F7F7F8;
+            --primary: #4CAF50;
+            --secondary: #2D6A4F;
+            --card: #fff;
+            --shadow: 0 4px 24px rgba(44,62,80,0.13);
+        }
+        html, body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', Arial, sans-serif;
+            background: linear-gradient(135deg, #B2F2D7 0%, #7ED9A7 100%);
+            color: #222;
+        }
+        header {
+            background: var(--card);
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 48px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--primary);
+        }
+        .header-center {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+        }
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 36px;
+        }
+        nav a {
+            position: relative;
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            margin: 0 18px;
+            transition: color 0.2s;
+        }
+        nav a::after {
+            content: '';
+            display: block;
+            height: 3px;
+            width: 0;
+            background: var(--primary);
+            border-radius: 2px;
+            transition: width 0.25s;
+            position: absolute;
+            left: 0;
+            bottom: -4px;
+        }
+        nav a:hover {
+            color: var(--primary);
+        }
+        nav a:hover::after {
+            width: 100%;
+        }
+        nav a.active, nav a[aria-current="page"] {
+            color: var(--primary);
+            font-weight: 700;
+        }
+        nav a.active::after, nav a[aria-current="page"]::after {
+            width: 100%;
+        }
+        .cta-button {
+            background: var(--primary);
+            color: #fff;
+            padding: 10px 32px;
+            border: none;
+            border-radius: 24px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .cta-button:hover {
+            background: var(--secondary);
+        }
+        main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 40px;
+            margin-bottom: 40px;
+        }
+        .scan-title {
+            text-align: center;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--secondary);
+            margin-top: 32px;
+            margin-bottom: 0;
+        }
+        .scan-subtitle {
+            text-align: center;
+            font-size: 1.15rem;
+            color: #444;
+            margin-bottom: 36px;
+            margin-top: 8px;
+        }
+        .glass-card {
+            background: rgba(255,255,255,0.55);
+            box-shadow: 0 8px 32px 0 rgba(44,62,80,0.13);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 22px;
+            border: 1.5px solid rgba(76,175,80,0.18);
+            padding: 38px 32px 32px 32px;
+            width: 100%;
+            max-width: 480px;
+            margin-bottom: 36px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: box-shadow 0.2s;
+        }
+        .glass-card:focus-within, .glass-card:hover {
+            box-shadow: 0 12px 40px 0 rgba(44,62,80,0.18);
+            border-color: var(--primary);
+        }
+        .drag-area {
+            border: 2px dashed #B2F2D7;
+            border-radius: 12px;
+            padding: 18px 0;
+            background: rgba(183,239,197,0.10);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: border-color 0.2s, background 0.2s;
+        }
+        .drag-area.dragover {
+            border-color: var(--primary);
+            background: rgba(183,239,197,0.22);
+        }
+        .file-input-label svg {
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+        .browse-text {
+            color: var(--primary);
+            text-decoration: underline;
+            cursor: pointer;
+        }
+        .card {
+            background: var(--card);
+            box-shadow: var(--shadow);
+            border-radius: 18px;
+            padding: 36px 32px;
+            width: 100%;
+            max-width: 480px;
+            margin-bottom: 32px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .card-title {
+            color: var(--secondary);
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 18px;
+        }
+        .upload-section {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        label {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 2px;
+        }
+        input[type="text"], input[type="file"] {
+            padding: 12px 14px;
+            border: 1.5px solid #d0e2d8;
+            border-radius: 7px;
+            font-size: 1rem;
+            font-family: inherit;
+            background: #f8f9fa;
+            transition: border 0.2s;
+        }
+        input[type="text"]:focus {
+            border: 1.5px solid var(--primary);
+            outline: none;
+        }
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+        .file-input-label {
+            background: var(--secondary);
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 8px;
+            display: inline-block;
+            text-align: center;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+        }
+        .file-input-wrapper:hover .file-input-label {
+            background: var(--primary);
+        }
+        .file-name {
+            margin-top: 0.5rem;
+            font-size: 0.98rem;
+            color: #555;
+        }
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 7px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: background 0.2s;
+            position: relative;
+        }
+        .btn:hover {
+            background: var(--secondary);
+        }
+        .spinner {
+            display: none;
+            width: 40px;
+            height: 40px;
+            margin: 20px auto;
+            border: 4px solid #e0e0e0;
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .results-section {
+            display: none;
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .medicine-list, #pharmacies-list {
+            margin-top: 1rem;
+        }
+        .medicine-item {
+            background: #eafaf1;
+            padding: 0.8rem;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            border-left: 4px solid var(--primary);
+            font-weight: 500;
+            color: var(--secondary);
+        }
+        .pharmacy-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f0f9ff;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--secondary);
+            transition: all 0.3s ease;
+        }
+        .pharmacy-card:hover {
+            background: #e0f0ff;
+            transform: translateX(5px);
+        }
+        .pharmacy-info {
+            flex: 3;
+        }
+        .pharmacy-name {
+            font-weight: bold;
+            color: var(--primary);
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
+        }
+        .pharmacy-address, .pharmacy-distance {
+            color: #444;
+            font-size: 0.98rem;
+        }
+        .availability {
+            flex: 1;
+            text-align: center;
+        }
+        .available {
+            background: #d4edda;
+            color: #155724;
+            padding: 0.3rem 0.7rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        .partially-available {
+            background: #fff3cd;
+            color: #856404;
+            padding: 0.3rem 0.7rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        .discount-badge {
+            background: #4CAF50;
+            color: white;
+            padding: 0.3rem 0.7rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 5px;
+        }
+        .discount-details {
+            font-size: 0.85rem;
+            color: var(--primary);
+            margin-top: 3px;
+        }
+        .directions-btn {
+            flex: 1;
+            text-align: right;
+        }
+        .directions-btn button {
+            background: var(--primary);
+            font-size: 0.9rem;
+            padding: 8px 16px;
+            border-radius: 20px;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .directions-btn button:hover {
+            background: var(--secondary);
+        }
+        /* Chat Assistant */
+        .ai-assistant {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--card);
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(44,62,80,0.13);
+            width: 320px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            font-family: 'Montserrat', Arial, sans-serif;
+        }
+        .ai-header {
+            background: var(--primary);
+            color: white;
+            padding: 12px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+        .ai-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .ai-icon {
+            font-size: 1.4rem;
+        }
+        .ai-body {
+            padding: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .ai-message {
+            background: #f0f4f8;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .ai-input {
+            display: flex;
+            padding: 10px 15px;
+            border-top: 1px solid #e0e0e0;
+        }
+        .ai-input input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            margin-right: 10px;
+        }
+        .ai-input button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 15px;
+            cursor: pointer;
+        }
+        .minimized {
+            height: 50px;
+            width: 50px;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+        .minimized .ai-body, .minimized .ai-input {
+            display: none;
+        }
+        .minimized .ai-header {
+            height: 100%;
+            width: 100%;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .minimized .ai-title span {
+            display: none;
+        }
+        .minimized .minimize-btn {
+            display: none;
+        }
+        .robot-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--secondary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 10px;
+        }
+        @media (max-width: 900px) {
+            main, .results-section {
+                max-width: 98vw;
+            }
+            header {
+                flex-direction: column;
+                padding: 12px 8px;
+            }
+            .glass-card {
+                padding: 18px 4vw 18px 4vw;
+                max-width: 98vw;
+            }
+            .ai-assistant {
+                width: 90vw;
+                right: 5vw;
+            }
+        }
+        .scan-form {
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto 36px auto;
+            display: flex;
+            flex-direction: column;
+            gap: 2.2rem;
+            background: none;
+            box-shadow: none;
+            border-radius: 0;
+            align-items: stretch;
+        }
+        .glassy {
+            background: rgba(255,255,255,0.55);
+            box-shadow: 0 8px 32px 0 rgba(44,62,80,0.13);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 18px;
+            border: 1.5px solid rgba(76,175,80,0.18);
+        }
+        .glass-result {
+            background: rgba(255,255,255,0.55);
+            box-shadow: 0 8px 32px 0 rgba(44,62,80,0.13);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 18px;
+            border: 1.5px solid rgba(76,175,80,0.18);
+            padding: 32px 24px;
+            margin-bottom: 32px;
+            max-width: 480px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        @media (max-width: 600px) {
+            .scan-form, .glass-result {
+                padding: 0 2vw;
+                max-width: 98vw;
+            }
+            .scan-title { font-size: 1.3rem; }
+        }
+        .ai-message.typing { color: #888; font-style: italic; }
+        /* Fade-in animation for results */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.7s, transform 0.7s;
+        }
+        .fade-in.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        /* Highlight discount badge with animation */
+        .highlight-discount {
+            animation: pulse-discount 1.2s infinite alternate;
+            box-shadow: 0 0 8px 2px #4CAF5033;
+        }
+        @keyframes pulse-discount {
+            from { box-shadow: 0 0 8px 2px #4CAF5000; }
+            to { box-shadow: 0 0 16px 6px #4CAF5077; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">AyurAI</div>
+        <div class="header-center">
+            <nav>
+                <a href="homepage.html">Home</a>
+                <a href="dashboard.html">Dashboard</a>
+                <a href="pres.html">Prescription scan</a>
+                <a href="index.html">Ayurvedic remedies</a>
+            </nav>
+        </div>
+        <button class="cta-button" onclick="window.location.href='main.html'">Logout</button>
+    </header>
+    <main>
+        <h1 class="scan-title">Prescription Scan</h1>
+        <p class="scan-subtitle">Upload your prescription and find nearby pharmacies with your medicines and discounts.</p>
+        <form class="scan-form" autocomplete="off">
+            <div class="input-group">
+                <label for="prescription">Upload Prescription Image</label>
+                <div class="file-input-wrapper drag-area glassy" id="drag-area">
+                    <span class="file-input-label"><svg width="28" height="28" fill="none" stroke="#4CAF50" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 19V6M5 12l7-7 7 7"/></svg> Drag & Drop or <span class="browse-text">Browse</span></span>
+                    <input type="file" id="prescription" accept="image/*">
+                </div>
+                <div class="file-name" id="file-name">No file chosen</div>
+                <div id="image-preview" style="display:none; margin-top:10px;"></div>
+            </div>
+            <div class="input-group">
+                <label for="location">Your Location</label>
+                <input type="text" id="location" placeholder="Enter your address or use current location">
+                <button id="current-location" class="btn" style="margin-top: 10px;">Use Current Location</button>
+            </div>
+            <button type="button" id="search-btn" class="btn" style="margin-top: 20px;">Find Medicines</button>
+        </form>
+        <div class="spinner" id="spinner" style="display:none;"></div>
+        <div id="progress-bar-container" style="display:none; width:100%; max-width:480px; margin:20px auto 0 auto;">
+            <div id="progress-bar" style="height:8px; background:#4CAF50; width:0%; border-radius:4px; transition:width 0.4s;"></div>
+        </div>
+        <div class="results-section" id="results">
+            <div class="glass-result">
+                <h2 class="card-title">Prescribed Medicines</h2>
+                <div class="medicine-list" id="medicine-list"></div>
+            </div>
+            <div class="glass-result">
+                <h2 class="card-title">Nearby Pharmacies</h2>
+                <div id="pharmacies-list"></div>
+            </div>
+        </div>
+    </main>
+    <div class="ai-assistant" id="ai-assistant">
+        <div class="ai-header" id="ai-header">
+            <div class="ai-title">
+                <div class="robot-avatar">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="6" y="10" width="20" height="14" rx="7" fill="#4CAF50" stroke="#2D6A4F" stroke-width="2"/>
+                        <circle cx="12" cy="18" r="2" fill="#fff"/>
+                        <circle cx="20" cy="18" r="2" fill="#fff"/>
+                        <rect x="14" y="22" width="4" height="2" rx="1" fill="#fff"/>
+                        <rect x="15" y="6" width="2" height="6" rx="1" fill="#2D6A4F"/>
+                        <circle cx="16" cy="6" r="1.2" fill="#B2F2D7" stroke="#2D6A4F" stroke-width="1"/>
+                    </svg>
+                </div>
+                <span>AyurAI Assistant</span>
+            </div>
+            <button class="minimize-btn" id="minimize-btn">—</button>
+        </div>
+        <div class="ai-body" id="ai-messages">
+            <div class="ai-message">
+                Hello! I'm your AyurAI assistant. Upload a prescription and I'll help you find nearby pharmacies with your medications and available discounts. How can I help you today?
+            </div>
+        </div>
+        <div class="ai-input">
+            <input type="text" id="ai-input" placeholder="Ask something...">
+            <button id="ai-send">Send</button>
+        </div>
+    </div>
+    <script>
+        const sampleMedicines = [
+            "Amoxicillin 500mg",
+            "Lisinopril 10mg",
+            "Atorvastatin 20mg"
+        ];
+        
+        const samplePharmacies = [
+            {
+                name: "Apollo Pharmacy",
+                address: "MG Road, Bengaluru, Karnataka",
+                distance: "0.8 km",
+                availability: "all",
+                discount: true,
+                discountDetails: "15% off on all generic medications",
+                discountAmount: "15%",
+                lat: 12.9716,
+                lng: 77.5946
+            },
+            {
+                name: "MedPlus Pharmacy",
+                address: "Anna Salai, Chennai, Tamil Nadu",
+                distance: "1.2 km",
+                availability: "partial",
+                discount: true,
+                discountDetails: "10% off for first-time customers",
+                discountAmount: "10%",
+                lat: 13.0827,
+                lng: 80.2707
+            },
+            {
+                name: "1mg Pharmacy",
+                address: "Sector 18, Noida, Uttar Pradesh",
+                distance: "1.5 km",
+                availability: "all",
+                discount: false,
+                lat: 28.5700,
+                lng: 77.3210
+            },
+            {
+                name: "Netmeds Store",
+                address: "Park Street, Kolkata, West Bengal",
+                distance: "1.8 km",
+                availability: "partial",
+                discount: true,
+                discountDetails: "20% senior discount available",
+                discountAmount: "20%",
+                lat: 22.5552,
+                lng: 88.3639
+            },
+            {
+                name: "Guardian Pharmacy",
+                address: "Connaught Place, New Delhi",
+                distance: "2.0 km",
+                availability: "all",
+                discount: false,
+                lat: 28.6315,
+                lng: 77.2167
+            },
+            {
+                name: "Sanjeevani Medicals",
+                address: "FC Road, Pune, Maharashtra",
+                distance: "2.3 km",
+                availability: "partial",
+                discount: true,
+                discountDetails: "5% off on all purchases",
+                discountAmount: "5%",
+                lat: 18.5167,
+                lng: 73.8567
+            },
+            {
+                name: "Wellness Forever",
+                address: "Bandra West, Mumbai, Maharashtra",
+                distance: "2.7 km",
+                availability: "all",
+                discount: true,
+                discountDetails: "Free home delivery",
+                discountAmount: "-",
+                lat: 19.0600,
+                lng: 72.8300
+            },
+            {
+                name: "Apollo Pharmacy",
+                address: "Banjara Hills, Hyderabad, Telangana",
+                distance: "3.0 km",
+                availability: "all",
+                discount: false,
+                lat: 17.4239,
+                lng: 78.4483
+            }
+        ];
+        
+        // Drag & Drop for file input
+        const dragArea = document.getElementById('drag-area');
+        const fileInput = document.getElementById('prescription');
+        dragArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dragArea.classList.add('dragover');
+        });
+        dragArea.addEventListener('dragleave', () => {
+            dragArea.classList.remove('dragover');
+        });
+        dragArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dragArea.classList.remove('dragover');
+            if (e.dataTransfer.files.length) {
+                fileInput.files = e.dataTransfer.files;
+                fileInput.dispatchEvent(new Event('change'));
+            }
+        });
+        dragArea.addEventListener('click', () => {
+            fileInput.value = '';
+            fileInput.click();
+        });
+        document.querySelector('.browse-text').addEventListener('click', (e) => {
+            e.stopPropagation();
+            fileInput.value = '';
+            fileInput.click();
+        });
+        
+        document.getElementById('prescription').addEventListener('change', function(e) {
+            const fileName = e.target.files[0] ? e.target.files[0].name : 'No file chosen';
+            document.getElementById('file-name').textContent = fileName;
+            console.log('File input changed:', fileName);
+            // Image preview
+            const preview = document.getElementById('image-preview');
+            preview.innerHTML = '';
+            if (e.target.files[0] && e.target.files[0].type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    preview.innerHTML = `<img src="${ev.target.result}" alt="Preview" style="max-width:120px; max-height:120px; border-radius:10px; box-shadow:0 2px 8px #b2f2d7;">`;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(e.target.files[0]);
+            } else {
+                preview.style.display = 'none';
+            }
+        });
+        
+        document.getElementById('current-location').addEventListener('click', function() {
+            document.getElementById('location').value = "Fetching location...";
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    document.getElementById('location').value = `Latitude: ${lat.toFixed(6)}, Longitude: ${lng.toFixed(6)}`;
+                    addAIMessage("I've detected your current location. Upload your prescription to find nearby pharmacies with discounts on your medications.");
+                }, function() {
+                    document.getElementById('location').value = "";
+                    alert("Could not fetch your location. Please enter it manually.");
+                });
+            } else {
+                document.getElementById('location').value = "";
+                alert("Geolocation is not supported by your browser. Please enter your location manually.");
+            }
+        });
+        
+        document.getElementById('search-btn').addEventListener('click', function(e) {
+            e.preventDefault();
+            const prescription = document.getElementById('prescription').files[0];
+            const location = document.getElementById('location').value;
+            if (!prescription) {
+                alert("Please upload a prescription image.");
+                return;
+            }
+            if (!location) {
+                alert("Please enter your location or use current location.");
+                return;
+            }
+            document.getElementById('spinner').style.display = 'none';
+            document.getElementById('progress-bar-container').style.display = 'block';
+            const progressBar = document.getElementById('progress-bar');
+            progressBar.style.width = '0%';
+            let progress = 0;
+            const progressInterval = setInterval(() => {
+                progress += Math.random() * 20 + 10;
+                if (progress >= 100) progress = 100;
+                progressBar.style.width = progress + '%';
+                if (progress >= 100) clearInterval(progressInterval);
+            }, 400);
+            document.getElementById('results').style.display = 'none';
+            setTimeout(function() {
+                document.getElementById('progress-bar-container').style.display = 'none';
+                progressBar.style.width = '0%';
+                document.getElementById('results').style.display = 'block';
+                const medicineList = document.getElementById('medicine-list');
+                medicineList.innerHTML = '';
+                sampleMedicines.forEach(medicine => {
+                    const div = document.createElement('div');
+                    div.className = 'medicine-item fade-in';
+                    div.innerHTML = `<span class="medicine-name">${medicine}</span>`;
+                    medicineList.appendChild(div);
+                    setTimeout(() => div.classList.add('show'), 100);
+                });
+                const pharmaciesList = document.getElementById('pharmacies-list');
+                pharmaciesList.innerHTML = '';
+                // Shuffle and pick 6 or more pharmacies
+                let shuffled = samplePharmacies.slice();
+                for (let i = shuffled.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+                }
+                const toShow = shuffled.length >= 6 ? shuffled.slice(0, 6 + Math.floor(Math.random() * (shuffled.length - 5))) : shuffled;
+                toShow.forEach((pharmacy, idx) => {
+                    const div = document.createElement('div');
+                    div.className = 'pharmacy-card fade-in';
+                    let discountHTML = '';
+                    if (pharmacy.discount) {
+                        discountHTML = `
+                            <div class="discount-badge highlight-discount">${pharmacy.discountAmount} Discount</div>
+                            <div class="discount-details">${pharmacy.discountDetails}</div>
+                        `;
+                    }
+                    div.innerHTML = `
+                        <div class="pharmacy-info">
+                            <div class="pharmacy-name">${pharmacy.name}</div>
+                            <div class="pharmacy-address">${pharmacy.address}</div>
+                            <div class="pharmacy-distance">${pharmacy.distance}</div>
+                            ${discountHTML}
+                        </div>
+                        <div class="availability">
+                            <span class="${pharmacy.availability === 'all' ? 'available' : 'partially-available'}">
+                                ${pharmacy.availability === 'all' ? 'All Available' : 'Partially Available'}
+                            </span>
+                        </div>
+                        <div class="directions-btn">
+                            <button onclick="openDirections(${pharmacy.lat}, ${pharmacy.lng})">Directions</button>
+                        </div>
+                    `;
+                    pharmaciesList.appendChild(div);
+                    setTimeout(() => div.classList.add('show'), 200 + idx * 100);
+                });
+                addAIMessage(`I've found ${toShow.length} pharmacies near you that have your medications. Results are shown below!`);
+                // Reset file input so user can upload the same file again
+                fileInput.value = '';
+                document.getElementById('file-name').textContent = 'No file chosen';
+                document.getElementById('image-preview').style.display = 'none';
+            }, 2000);
+        });
+        
+        const aiAssistant = document.getElementById('ai-assistant');
+        const aiHeader = document.getElementById('ai-header');
+        const minimizeBtn = document.getElementById('minimize-btn');
+        const aiMessages = document.getElementById('ai-messages');
+        const aiInput = document.getElementById('ai-input');
+        const aiSend = document.getElementById('ai-send');
+        
+
+        aiHeader.addEventListener('click', function(e) {
+            if (e.target !== minimizeBtn) {
+                aiAssistant.classList.toggle('minimized');
+                if (aiAssistant.classList.contains('minimized')) {
+                    minimizeBtn.textContent = '+';
+                } else {
+                    minimizeBtn.textContent = '—';
+                    aiInput.focus();
+                }
+            }
+        });
+        
+        minimizeBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            aiAssistant.classList.toggle('minimized');
+            if (aiAssistant.classList.contains('minimized')) {
+                minimizeBtn.textContent = '+';
+            } else {
+                minimizeBtn.textContent = '—';
+                aiInput.focus();
+            }
+        });
+        
+        // --- AI Assistant Upgrade ---
+        const SUGGESTIONS = [
+            "How do I upload a prescription?",
+            "How do I use my current location?",
+            "What discounts are available?",
+            "How do I find nearby pharmacies?",
+            "Can I get Ayurvedic alternatives?",
+            "Is my data secure?"
+        ];
+        let inactivityTimer;
+        function showSuggestions() {
+            addAIMessage("You can ask things like:");
+            SUGGESTIONS.forEach(s => addAIMessage(`• ${s}`));
+        }
+        function showTyping(cb) {
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'ai-message typing';
+            typingDiv.textContent = 'AyurAI is typing...';
+            aiMessages.appendChild(typingDiv);
+            aiMessages.scrollTop = aiMessages.scrollHeight;
+            setTimeout(() => {
+                typingDiv.remove();
+                cb();
+            }, 700 + Math.random() * 600);
+        }
+        function smartAIResponse(message) {
+            message = message.toLowerCase();
+            // Greetings
+            if (/\b(hello|hi|hey|namaste|good (morning|afternoon|evening))\b/.test(message)) {
+                return "Hi there! 👋 How can I help you with your prescription or finding medicines today?";
+            }
+            // Upload
+            if (/upload|prescription|photo|image/.test(message)) {
+                return "To upload your prescription, click the 'Drag & Drop or Browse' area above and select your image. Supported formats: JPG, PNG, PDF.";
+            }
+            // Location
+            if (/location|address|current location|gps|where am i/.test(message)) {
+                return "You can enter your address or click 'Use Current Location' to auto-detect. This helps us find the closest pharmacies to you.";
+            }
+            // Find medicines
+            if (/find|search|medicine|medication|drug|pharmacy|pharmacies|store/.test(message)) {
+                return "After uploading your prescription and entering your location, click 'Find Medicines'. We'll show you nearby pharmacies with your medicines in stock.";
+            }
+            // Discounts
+            if (/discount|offer|coupon|save|deal/.test(message)) {
+                return "Many pharmacies offer discounts. We'll highlight available offers, like 10% off for first-time customers or senior discounts.";
+            }
+            // Ayurvedic
+            if (/ayurveda|ayurvedic|natural|alternative|remedy|remedies/.test(message)) {
+                return "Yes! We suggest natural Ayurvedic remedies alongside conventional medicines when possible.";
+            }
+            // Security
+            if (/secure|privacy|data|safe|confidential/.test(message)) {
+                return "Your data is encrypted and never shared without your consent. We take your privacy seriously.";
+            }
+            // Support
+            if (/help|support|contact|problem|issue|error/.test(message)) {
+                return "If you need further help, you can ask here or email support@ayuraihealth.com. I'm here to assist!";
+            }
+            // Thanks
+            if (/thank|thanks|thank you|grateful/.test(message)) {
+                return "You're welcome! 😊 Let me know if you need anything else.";
+            }
+            // Unknown
+            return null;
+        }
+        function addAIMessage(message) {
+            const div = document.createElement('div');
+            div.className = 'ai-message';
+            div.textContent = message;
+            aiMessages.appendChild(div);
+            aiMessages.scrollTop = aiMessages.scrollHeight;
+            if (message.startsWith('• ')) div.style.color = '#2D6A4F';
+        }
+        function processUserMessage(message) {
+            clearTimeout(inactivityTimer);
+            showTyping(() => {
+                const response = smartAIResponse(message);
+                if (response) {
+                    addAIMessage(response);
+                } else {
+                    addAIMessage("I'm here to help you with prescriptions, locations, pharmacies, and more. Could you rephrase your question?");
+                    showSuggestions();
+                }
+                inactivityTimer = setTimeout(() => {
+                    addAIMessage("Still there? If you need help, just ask or try one of these:");
+                    showSuggestions();
+                }, 30000);
+            });
+        }
+        // Initial greeting and suggestions
+        setTimeout(() => {
+            addAIMessage("Tip: You can ask about uploading, locations, discounts, or Ayurvedic remedies!");
+            showSuggestions();
+        }, 1200);
+        aiSend.addEventListener('click', function() {
+            const message = aiInput.value.trim();
+            if (message) {
+                addUserMessage(message);
+                aiInput.value = '';
+                processUserMessage(message);
+            }
+        });
+        aiInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const message = aiInput.value.trim();
+                if (message) {
+                    addUserMessage(message);
+                    aiInput.value = '';
+                    processUserMessage(message);
+                }
+            }
+        });
+        function addUserMessage(message) {
+            const div = document.createElement('div');
+            div.className = 'ai-message';
+            div.style.backgroundColor = '#e0f0ff';
+            div.style.marginLeft = '40px';
+            div.textContent = message;
+            aiMessages.appendChild(div);
+            aiMessages.scrollTop = aiMessages.scrollHeight;
+        }
+        function openDirections(lat, lng) {
+            const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+            window.open(url, '_blank');
+        }
+        // Add 'active' class to the current page link
+        document.addEventListener('DOMContentLoaded', function() {
+            var path = window.location.pathname.split('/').pop();
+            document.querySelectorAll('nav a').forEach(function(link) {
+                if(link.getAttribute('href') === path) {
+                    link.classList.add('active');
+                    link.setAttribute('aria-current', 'page');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

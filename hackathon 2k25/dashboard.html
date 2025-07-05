@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - AyurAI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --porcelain: #F7F7F8;
+            --primary: #4CAF50;
+            --secondary: #2D6A4F;
+            --text: #222;
+            --card: #fff;
+            --shadow: 0 4px 16px rgba(44,62,80,0.07);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', Arial, sans-serif;
+            background: linear-gradient(135deg, #b2f2d7 0%, #7ed9a7 100%);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: var(--card);
+            box-shadow: var(--shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 48px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            border-radius: 0 0 18px 18px;
+            margin-bottom: 32px;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--primary);
+        }
+
+        nav {
+            display: flex;
+            gap: 36px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 500;
+            font-size: 1.1rem;
+            transition: color 0.2s;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        .cta-button {
+            background: var(--primary);
+            color: #fff;
+            padding: 10px 32px;
+            border: none;
+            border-radius: 24px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .cta-button:hover {
+            background: var(--secondary);
+        }
+
+        .dashboard-main {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .glass-card {
+            background: var(--card);
+            box-shadow: var(--shadow);
+            border-radius: 18px;
+            padding: 28px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            border: 1px solid rgba(76, 175, 80, 0.1);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 32px rgba(44,62,80,0.13);
+        }
+
+        .glass-card h2 {
+            color: var(--secondary);
+            margin-bottom: 18px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .glass-card h3 {
+            color: var(--secondary);
+            margin-bottom: 12px;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .profile-summary {
+            color: var(--text);
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+
+        .quick-links {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .quick-link {
+            background: var(--primary);
+            color: #fff;
+            text-decoration: none;
+            padding: 14px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.2s;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(76, 175, 80, 0.2);
+        }
+
+        .quick-link:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+        }
+
+        .recent-activity {
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .activity-item {
+            padding: 12px;
+            margin: 8px 0;
+            background: rgba(76, 175, 80, 0.05);
+            border-radius: 12px;
+            border-left: 4px solid var(--primary);
+            transition: all 0.2s;
+        }
+
+        .activity-item:hover {
+            background: rgba(76, 175, 80, 0.1);
+            transform: translateX(4px);
+        }
+
+        .progress-container {
+            background: rgba(76, 175, 80, 0.1);
+            border-radius: 12px;
+            height: 20px;
+            overflow: hidden;
+            margin: 12px 0;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            height: 100%;
+            border-radius: 12px;
+            transition: width 1s ease;
+            position: relative;
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 16px;
+            margin: 16px 0;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 16px;
+            background: rgba(76, 175, 80, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(76, 175, 80, 0.1);
+        }
+
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 6px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        .notification-item {
+            padding: 12px;
+            margin: 8px 0;
+            background: rgba(255, 152, 0, 0.05);
+            border-radius: 12px;
+            border-left: 4px solid #FF9800;
+            transition: all 0.2s;
+        }
+
+        .notification-item:hover {
+            background: rgba(255, 152, 0, 0.1);
+        }
+
+        .reminder-item {
+            padding: 12px;
+            margin: 8px 0;
+            background: rgba(33, 150, 243, 0.05);
+            border-radius: 12px;
+            border-left: 4px solid #2196F3;
+            transition: all 0.2s;
+        }
+
+        .reminder-item:hover {
+            background: rgba(33, 150, 243, 0.1);
+        }
+
+        .favorite-item {
+            padding: 12px;
+            margin: 8px 0;
+            background: rgba(255, 215, 0, 0.05);
+            border-radius: 12px;
+            border-left: 4px solid #FFD700;
+            transition: all 0.2s;
+        }
+
+        .favorite-item:hover {
+            background: rgba(255, 215, 0, 0.1);
+        }
+
+        .tip-card {
+            background: linear-gradient(135deg, rgba(76, 175, 80, 0.1), rgba(45, 106, 79, 0.1));
+            border: 1px solid rgba(76, 175, 80, 0.2);
+            padding: 16px;
+            border-radius: 12px;
+            margin-top: 12px;
+        }
+
+        .settings-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(76, 175, 80, 0.1);
+        }
+
+        .settings-item:last-child {
+            border-bottom: none;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 24px;
+            background: rgba(76, 175, 80, 0.2);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .toggle-switch.active {
+            background: var(--primary);
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+
+        .toggle-switch.active::after {
+            transform: translateX(26px);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 32px;
+            color: #666;
+            font-size: 0.98rem;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-main {
+                grid-template-columns: 1fr;
+            }
+            
+            nav {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            header {
+                flex-direction: column;
+                gap: 20px;
+                padding: 12px 8px;
+            }
+        }
+
+        .welcome-section {
+            grid-column: 1 / -1;
+        }
+
+        .health-snapshot {
+            grid-column: 1 / -1;
+        }
+
+        .quick-actions {
+            grid-column: 1 / -1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">AyurAI</div>
+            <nav>
+                <a href="homepage.html">Home</a>
+                <a href="pres.html">Prescription scan</a>
+                <a href="index.html">Ayurvedic remedies</a>
+                <a href="dashboard.html">Dashboard</a>
+            </nav>
+            <button class="cta-button" onclick="window.location.href='main.html'">Logout</button>
+        </header>
+
+        <div class="dashboard-main">
+            <!-- Personalized Welcome -->
+            <div class="glass-card welcome-section" onclick="editProfile()">
+                <div style="display:flex;align-items:center;gap:24px;">
+                    <div style="width:72px;height:72px;border-radius:50%;background:rgba(76,175,80,0.1);display:flex;align-items:center;justify-content:center;font-size:2.5rem;color:var(--primary);">
+                        <span id="profile-emoji">👤</span>
+                    </div>
+                    <div>
+                        <h2 id="welcome-message">Good day, Guest!</h2>
+                        <div class="profile-summary">
+                            <b>Profile summary:</b> <span id="user-name">Guest</span><br>
+                            Email: <span id="user-email">Not logged in</span><br>
+                            Last login: <span id="last-login">-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Health Snapshot -->
+            <div class="glass-card health-snapshot">
+                <h2>📊 Health Snapshot</h2>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number" id="scan-count">0</div>
+                        <div class="stat-label">Recent Scans</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="streak-days">0</div>
+                        <div class="stat-label">Day Streak</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="favorites-count">0</div>
+                        <div class="stat-label">Favorites</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="recommendations-count">0</div>
+                        <div class="stat-label">Recommendations</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="glass-card quick-actions">
+                <h2>⚡ Quick Actions</h2>
+                <div class="quick-links">
+                    <a class="quick-link" href="pres.html" onclick="trackAction('scan')">📷 Scan Prescription</a>
+                    <a class="quick-link" href="index.html" onclick="trackAction('recommendations')">🌿 Ayurvedic Recommendations</a>
+                    <a class="quick-link" href="#" onclick="editProfile()">👤 Update Profile</a>
+                    <a class="quick-link" href="#" onclick="showSettings()">⚙️ Settings</a>
+                </div>
+            </div>
+
+            <!-- Progress Tracker -->
+            <div class="glass-card">
+                <h2>📈 Progress Tracker</h2>
+                <div style="margin-bottom:8px;font-weight:600;">Healthy Habits Streak</div>
+                <div class="progress-container">
+                    <div class="progress-bar" id="progress-bar"></div>
+                </div>
+                <div style="font-size:0.98rem;color:#666;margin-top:4px;" id="streak-text">0 days in a row</div>
+            </div>
+
+            <!-- Reminders & Notifications -->
+            <div class="glass-card">
+                <h2>🔔 Reminders & Notifications</h2>
+                <div id="notifications-container">
+                    <div class="notification-item">
+                        <strong>Welcome!</strong> Start your health journey by scanning your first prescription.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Saved Remedies & Favorites -->
+            <div class="glass-card">
+                <h2>⭐ Saved Remedies & Favorites</h2>
+                <div id="favorites-container">
+                    <div style="color:#666;">No favorites yet. Bookmark remedies to see them here!</div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="glass-card">
+                <h2>📋 Recent Activity</h2>
+                <div id="activity-container">
+                    <div class="activity-item">
+                        <strong>Dashboard accessed</strong><br>
+                        <small>Just now</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Management -->
+            <div class="glass-card" onclick="editProfile()">
+                <h2>👤 Profile Management</h2>
+                <div style="color:#666;">Click to edit your profile info, change password, or upload a profile picture.</div>
+            </div>
+
+            <!-- Settings -->
+            <div class="glass-card">
+                <h2>⚙️ Settings</h2>
+                <div class="settings-item">
+                    <span>Email Notifications</span>
+                    <div class="toggle-switch" onclick="toggleSetting('emailNotifications')"></div>
+                </div>
+                <div class="settings-item">
+                    <span>Push Notifications</span>
+                    <div class="toggle-switch active" onclick="toggleSetting('pushNotifications')"></div>
+                </div>
+                <div class="settings-item">
+                    <span>Dark Theme</span>
+                    <div class="toggle-switch" onclick="toggleSetting('darkTheme')"></div>
+                </div>
+            </div>
+
+            <!-- Support & Help -->
+            <div class="glass-card">
+                <h2>🆘 Support & Help</h2>
+                <div style="color:#666;margin-bottom:15px;">Need help? We're here to assist you!</div>
+                <div class="quick-links">
+                    <a class="quick-link" href="#" onclick="showFAQ()">📖 FAQs</a>
+                    <a class="quick-link" href="#" onclick="contactSupport()">📧 Contact Support</a>
+                    <a class="quick-link" href="#" onclick="showTutorial()">🎥 Tutorial</a>
+                </div>
+            </div>
+
+            <!-- Health Tips & News -->
+            <div class="glass-card">
+                <h2>📰 Health Tips & News</h2>
+                <div class="tip-card">
+                    <strong>Tip of the day:</strong> <span id="daily-tip">Drink warm water in the morning to kickstart your digestion!</span>
+                </div>
+                <div style="margin-top:15px;text-align:center;">
+                    <button onclick="refreshTip()" style="background:var(--primary);border:none;color:white;padding:8px 16px;border-radius:8px;cursor:pointer;font-weight:600;">🔄 New Tip</button>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            © 2024 AyurAI. All rights reserved.
+        </footer>
+    </div>
+
+    <script>
+        // Initialize dashboard data
+        let dashboardData = JSON.parse(localStorage.getItem('dashboardData')) || {
+            userName: 'Guest',
+            userEmail: 'Not logged in',
+            lastLogin: new Date().toLocaleDateString(),
+            scanCount: 0,
+            streakDays: 0,
+            favoritesCount: 0,
+            recommendationsCount: 0,
+            activities: [],
+            favorites: [],
+            notifications: [],
+            settings: {
+                emailNotifications: false,
+                pushNotifications: true,
+                darkTheme: false
+            },
+            dailyTips: [
+                "Drink warm water in the morning to kickstart your digestion!",
+                "Practice deep breathing for 5 minutes daily to reduce stress.",
+                "Include turmeric in your diet for its anti-inflammatory properties.",
+                "Get 7-8 hours of sleep for optimal health and recovery.",
+                "Stay hydrated by drinking 8 glasses of water daily.",
+                "Practice yoga or meditation for mental wellness.",
+                "Eat seasonal fruits and vegetables for better nutrition.",
+                "Take regular breaks from screen time to protect your eyes.",
+                "Walk for at least 30 minutes daily for cardiovascular health.",
+                "Practice gratitude daily for better mental health."
+            ]
+        };
+
+        // Update dashboard on load
+        function updateDashboard() {
+            document.getElementById('user-name').textContent = dashboardData.userName;
+            document.getElementById('user-email').textContent = dashboardData.userEmail;
+            document.getElementById('last-login').textContent = dashboardData.lastLogin;
+            document.getElementById('scan-count').textContent = dashboardData.scanCount;
+            document.getElementById('streak-days').textContent = dashboardData.streakDays;
+            document.getElementById('favorites-count').textContent = dashboardData.favoritesCount;
+            document.getElementById('recommendations-count').textContent = dashboardData.recommendationsCount;
+            
+            // Update progress bar
+            const progressBar = document.getElementById('progress-bar');
+            const progressPercentage = Math.min((dashboardData.streakDays / 30) * 100, 100);
+            progressBar.style.width = progressPercentage + '%';
+            
+            document.getElementById('streak-text').textContent = `${dashboardData.streakDays} days in a row`;
+            
+            // Update welcome message based on time
+            const hour = new Date().getHours();
+            let greeting = 'Good day';
+            if (hour < 12) greeting = 'Good morning';
+            else if (hour < 17) greeting = 'Good afternoon';
+            else greeting = 'Good evening';
+            
+            document.getElementById('welcome-message').textContent = `${greeting}, ${dashboardData.userName}!`;
+            
+            // Update daily tip
+            const tipIndex = Math.floor(Math.random() * dashboardData.dailyTips.length);
+            document.getElementById('daily-tip').textContent = dashboardData.dailyTips[tipIndex];
+            
+            // Update settings toggles
+            updateSettingsToggles();
+        }
+
+        // Track user actions
+        function trackAction(action) {
+            dashboardData.activities.unshift({
+                action: action,
+                timestamp: new Date().toLocaleString(),
+                description: getActionDescription(action)
+            });
+            
+            // Keep only last 10 activities
+            if (dashboardData.activities.length > 10) {
+                dashboardData.activities = dashboardData.activities.slice(0, 10);
+            }
+            
+            // Update counts based on action
+            if (action === 'scan') dashboardData.scanCount++;
+            if (action === 'recommendations') dashboardData.recommendationsCount++;
+            
+            saveDashboardData();
+            updateActivityDisplay();
+        }
+
+        function getActionDescription(action) {
+            const descriptions = {
+                'scan': 'Scanned a prescription',
+                'recommendations': 'Viewed Ayurvedic recommendations',
+                'profile': 'Updated profile',
+                'settings': 'Accessed settings'
+            };
+            return descriptions[action] || action;
+        }
+
+        // Update activity display
+        function updateActivityDisplay() {
+            const container = document.getElementById('activity-container');
+            container.innerHTML = '';
+            
+            dashboardData.activities.forEach(activity => {
+                const activityDiv = document.createElement('div');
+                activityDiv.className = 'activity-item';
+                activityDiv.innerHTML = `
+                    <strong>${activity.description}</strong><br>
+                    <small>${activity.timestamp}</small>
+                `;
+                container.appendChild(activityDiv);
+            });
+        }
+
+        // Toggle settings
+        function toggleSetting(setting) {
+            dashboardData.settings[setting] = !dashboardData.settings[setting];
+            saveDashboardData();
+            updateSettingsToggles();
+        }
+
+        function updateSettingsToggles() {
+            Object.keys(dashboardData.settings).forEach(setting => {
+                const toggle = document.querySelector(`[onclick="toggleSetting('${setting}')"]`);
+                if (dashboardData.settings[setting]) {
+                    toggle.classList.add('active');
+                } else {
+                    toggle.classList.remove('active');
+                }
+            });
+        }
+
+        // Save data to localStorage
+        function saveDashboardData() {
+            localStorage.setItem('dashboardData', JSON.stringify(dashboardData));
+        }
+
+        // Profile functions
+        function editProfile() {
+            const name = prompt('Enter your name:', dashboardData.userName);
+            if (name) {
+                dashboardData.userName = name;
+                const email = prompt('Enter your email:', dashboardData.userEmail);
+                if (email) dashboardData.userEmail = email;
+                
+                saveDashboardData();
+                updateDashboard();
+                
+                // Add activity
+                trackAction('profile');
+            }
+        }
+
+        // Support functions
+        function showFAQ() {
+            alert('FAQ section coming soon!');
+        }
+
+        function contactSupport() {
+            alert('Contact support at support@ayurAI.com');
+        }
+
+        function showTutorial() {
+            alert('Tutorial videos coming soon!');
+        }
+
+        function showSettings() {
+            alert('Settings panel opened!');
+        }
+
+        // Refresh daily tip
+        function refreshTip() {
+            const tipIndex = Math.floor(Math.random() * dashboardData.dailyTips.length);
+            document.getElementById('daily-tip').textContent = dashboardData.dailyTips[tipIndex];
+        }
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            updateDashboard();
+            updateActivityDisplay();
+            
+            // Add initial activity
+            if (dashboardData.activities.length === 0) {
+                trackAction('dashboard');
+            }
+        });
+
+        // Simulate some data for demo
+        function simulateData() {
+            dashboardData.scanCount = Math.floor(Math.random() * 10) + 1;
+            dashboardData.streakDays = Math.floor(Math.random() * 15) + 1;
+            dashboardData.favoritesCount = Math.floor(Math.random() * 5);
+            dashboardData.recommendationsCount = Math.floor(Math.random() * 8) + 2;
+            
+            saveDashboardData();
+            updateDashboard();
+        }
+
+        // Uncomment the line below to simulate random data for demo
+        // simulateData();
+    </script>
+</body>
+</html> 

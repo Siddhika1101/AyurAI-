@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | AyurAI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --porcelain: #F7F7F8;
+            --primary: #4CAF50;
+            --secondary: #2D6A4F;
+            --card: #fff;
+            --shadow: 0 4px 24px rgba(44,62,80,0.13);
+        }
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', Arial, sans-serif;
+            background: linear-gradient(135deg, #B2F2D7 0%, #7ED9A7 100%);
+        }
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .login-container {
+            background: var(--card);
+            padding: 40px 32px 32px 32px;
+            border-radius: 18px;
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 350px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+        .login-logo {
+            font-size: 2.1rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+        .login-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 28px;
+            color: var(--secondary);
+        }
+        .input-field {
+            width: 100%;
+            padding: 12px 14px;
+            margin-bottom: 16px;
+            border: 1.5px solid #d0e2d8;
+            border-radius: 7px;
+            font-size: 1rem;
+            font-family: inherit;
+            background: #f8f9fa;
+            transition: border 0.2s;
+        }
+        .input-field:focus {
+            border: 1.5px solid var(--primary);
+            outline: none;
+        }
+        .password-wrapper {
+            width: 100%;
+            position: relative;
+        }
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            color: #888;
+        }
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 7px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: background 0.2s;
+            position: relative;
+        }
+        .btn:hover {
+            background: var(--secondary);
+        }
+        .loading-spinner {
+            display: none;
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 22px;
+            height: 22px;
+            border: 3px solid #fff;
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: translateY(-50%) rotate(0deg); }
+            100% { transform: translateY(-50%) rotate(360deg); }
+        }
+        .login-footer {
+            margin-top: 18px;
+            font-size: 0.98rem;
+            color: #888;
+            text-align: center;
+        }
+        @media (max-width: 500px) {
+            .login-container {
+                padding: 28px 8px 24px 8px;
+                max-width: 98vw;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-logo">AyurAI</div>
+        <div class="login-title">Sign in to your account</div>
+        <form id="loginForm" autocomplete="off">
+            <input type="text" class="input-field" id="username" placeholder="Username" required>
+            <div class="password-wrapper">
+                <input type="password" class="input-field" id="password" placeholder="Password" required>
+                <button type="button" class="toggle-password" tabindex="-1" aria-label="Show password" onclick="togglePassword()">
+                  <span id="eyeIcon">
+                    <svg id="eyeOpen" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="12" rx="8" ry="5"/><circle cx="12" cy="12" r="2.5"/></svg>
+                  </span>
+                </button>
+            </div>
+            <button type="submit" class="btn" id="loginBtn">
+                <span>Login</span>
+                <span class="loading-spinner" id="spinner"></span>
+            </button>
+        </form>
+        <div class="login-footer">&copy; 2024 AyurAI. All rights reserved.</div>
+    </div>
+    <script>
+    function togglePassword() {
+        const pwd = document.getElementById('password');
+        const btn = document.querySelector('.toggle-password');
+        const eyeIcon = document.getElementById('eyeIcon');
+        if (pwd.type === 'password') {
+            pwd.type = 'text';
+            eyeIcon.innerHTML = `<svg id="eyeClosed" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="12" rx="8" ry="5"/><circle cx="12" cy="12" r="2.5"/><line x1="3" y1="3" x2="21" y2="21"/></svg>`;
+        } else {
+            pwd.type = 'password';
+            eyeIcon.innerHTML = `<svg id="eyeOpen" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="12" rx="8" ry="5"/><circle cx="12" cy="12" r="2.5"/></svg>`;
+        }
+    }
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        const btn = document.getElementById('loginBtn');
+        const spinner = document.getElementById('spinner');
+        btn.disabled = true;
+        spinner.style.display = 'inline-block';
+        setTimeout(() => {
+            spinner.style.display = 'none';
+            btn.disabled = false;
+            if (username === "user" && password === "password") {
+                window.location.href = "homepage.html";
+            } else {
+                alert("Invalid username or password");
+            }
+        }, 1200);
+    });
+    </script>
+</body>
+</html>

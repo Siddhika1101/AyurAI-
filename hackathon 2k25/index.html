@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIHerb</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --porcelain: #F7F7F8;
+            --primary: #4CAF50;
+            --secondary: #2D6A4F;
+            --card: #fff;
+            --shadow: 0 4px 24px rgba(44,62,80,0.13);
+        }
+        html, body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', Arial, sans-serif;
+            background: linear-gradient(135deg, #B2F2D7 0%, #7ED9A7 100%);
+            color: #222;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            background: var(--card);
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 48px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            border-radius: 0 0 18px 18px;
+        }
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--primary);
+        }
+        .header-center {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+        }
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 36px;
+        }
+        nav a {
+            position: relative;
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            margin: 0 18px;
+            transition: color 0.2s;
+        }
+        nav a::after {
+            content: '';
+            display: block;
+            height: 3px;
+            width: 0;
+            background: var(--primary);
+            border-radius: 2px;
+            transition: width 0.25s;
+            position: absolute;
+            left: 0;
+            bottom: -4px;
+        }
+        nav a:hover {
+            color: var(--primary);
+        }
+        nav a:hover::after {
+            width: 100%;
+        }
+        nav a.active, nav a[aria-current="page"] {
+            color: var(--primary);
+            font-weight: 700;
+        }
+        nav a.active::after, nav a[aria-current="page"]::after {
+            width: 100%;
+        }
+        .cta-button {
+            background: var(--primary);
+            color: #fff;
+            padding: 10px 32px;
+            border: none;
+            border-radius: 24px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .cta-button:hover {
+            background: var(--secondary);
+        }
+        .glass-card {
+            background: rgba(255,255,255,0.55);
+            box-shadow: 0 8px 32px 0 rgba(44,62,80,0.13);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 22px;
+            border: 1.5px solid rgba(76,175,80,0.18);
+            padding: 38px 32px 32px 32px;
+            width: 100%;
+            margin-bottom: 36px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: box-shadow 0.2s;
+        }
+        .glass-card:focus-within, .glass-card:hover {
+            box-shadow: 0 12px 40px 0 rgba(44,62,80,0.18);
+            border-color: var(--primary);
+        }
+        .glass-result {
+            background: rgba(255,255,255,0.55);
+            box-shadow: 0 8px 32px 0 rgba(44,62,80,0.13);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 18px;
+            border: 1.5px solid rgba(76,175,80,0.18);
+            padding: 32px 24px;
+            margin-bottom: 32px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            animation: fadeIn 1s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .intro, .form-container {
+            box-shadow: none;
+            background: none;
+            padding: 0;
+            margin-bottom: 0;
+        }
+        .intro {
+            margin-bottom: 30px;
+        }
+        .form-container {
+            margin-bottom: 30px;
+        }
+        .glass-card h2, .glass-result h2 {
+            color: var(--secondary);
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 18px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-bottom: 28px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 1.1rem;
+            text-align: left;
+        }
+        .form-row {
+            display: flex;
+            gap: 16px;
+            width: 100%;
+        }
+        .form-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+        select, input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        select {
+            padding: 12px 14px;
+            border: 1.5px solid #d0e2d8;
+            border-radius: 7px;
+            font-size: 1rem;
+            font-family: inherit;
+            background: #f8f9fa;
+            transition: border 0.2s;
+        }
+        select:focus {
+            border: 1.5px solid var(--primary);
+            outline: none;
+        }
+        .symptom-checkboxes {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .symptom-item {
+            width: 33%;
+            margin-bottom: 10px;
+        }
+        button, #submit-btn {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 7px;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-weight: 600;
+        }
+        button:hover, #submit-btn:hover {
+            background: var(--secondary);
+        }
+        #recommendations {
+            display: none;
+        }
+        #recommendations.show {
+            display: block;
+            animation: fadeIn 1s;
+        }
+        .recommendation-section h3 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        .recommendation-section ul {
+            padding-left: 20px;
+        }
+        .recommendation-section ul li {
+            margin-bottom: 8px;
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px 0;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        .dosha-description {
+            margin-top: 10px;
+            font-style: italic;
+            color: #666;
+        }
+        @media (max-width: 900px) {
+            .container {
+                max-width: 98vw;
+            }
+            header {
+                flex-direction: column;
+                padding: 12px 8px;
+            }
+            .glass-card, .glass-result {
+                padding: 18px 4vw 18px 4vw;
+                max-width: 98vw;
+            }
+        }
+        @media (max-width: 600px) {
+            .glass-card, .glass-result {
+                padding: 0 2vw;
+                max-width: 98vw;
+            }
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+        }
+        .main-centered {
+            max-width: 600px;
+            margin: 48px auto 32px auto;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+        .glass-card, .glass-result {
+            width: 100%;
+            box-sizing: border-box;
+            margin-bottom: 0;
+            border-radius: 22px;
+            box-shadow: 0 8px 32px 0 rgba(44,62,80,0.13);
+            background: rgba(255,255,255,0.65);
+            transition: box-shadow 0.2s, transform 0.2s;
+        }
+        .glass-card:hover, .glass-result:hover {
+            box-shadow: 0 16px 48px 0 rgba(44,62,80,0.18);
+            transform: translateY(-2px) scale(1.01);
+        }
+        .glass-card.intro {
+            padding: 40px 36px 32px 36px;
+            text-align: center;
+        }
+        .glass-card.form-container {
+            padding: 36px 32px 32px 32px;
+        }
+        .glass-result {
+            padding: 36px 32px 32px 32px;
+            margin-top: 0;
+        }
+        .glass-card h2, .glass-result h2 {
+            color: var(--secondary);
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 18px;
+            letter-spacing: 0.5px;
+        }
+        .form-row {
+            display: flex;
+            gap: 16px;
+            width: 100%;
+        }
+        .form-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+        .form-row .form-group input {
+            width: 100%;
+        }
+        .form-row .form-group select {
+            width: 100%;
+        }
+        .form-row .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 1.1rem;
+            text-align: left;
+        }
+        .form-row .form-group input, .form-row .form-group select {
+            padding: 12px 14px;
+            border: 1.5px solid #d0e2d8;
+            border-radius: 7px;
+            font-size: 1rem;
+            font-family: inherit;
+            background: #f8f9fa;
+            transition: border 0.2s;
+        }
+        .form-row .form-group input:focus, .form-row .form-group select:focus {
+            border: 1.5px solid var(--primary);
+            outline: none;
+        }
+        .symptom-checkboxes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 0;
+        }
+        .symptom-item {
+            width: 50%;
+            margin-bottom: 8px;
+        }
+        button, #submit-btn {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 14px 0;
+            font-size: 1.15rem;
+            border-radius: 7px;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-weight: 700;
+            width: 100%;
+            margin-top: 10px;
+        }
+        button:hover, #submit-btn:hover {
+            background: var(--secondary);
+        }
+        #recommendations.show {
+            display: block;
+            animation: fadeIn 1s;
+        }
+        .recommendation-section h3 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 1.15rem;
+        }
+        .recommendation-section ul {
+            padding-left: 20px;
+        }
+        .recommendation-section ul li {
+            margin-bottom: 8px;
+        }
+        .dosha-description {
+            margin-top: 10px;
+            font-style: italic;
+            color: #666;
+        }
+        @media (max-width: 700px) {
+            .main-centered {
+                max-width: 98vw;
+                padding: 0 2vw;
+            }
+            .glass-card, .glass-result {
+                padding: 18px 4vw 18px 4vw;
+                max-width: 98vw;
+            }
+        }
+        .profile-section {
+            background: rgba(255,255,255,0.55);
+            box-shadow: 0 4px 24px 0 rgba(44,62,80,0.13);
+            border-radius: 18px;
+            padding: 32px 24px 24px 24px;
+            margin-bottom: 32px;
+            position: relative;
+        }
+        .section-heading {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--secondary);
+            margin-bottom: 18px;
+        }
+        .section-heading .info-icon {
+            font-size: 1.1rem;
+            color: var(--primary);
+            cursor: pointer;
+            position: relative;
+        }
+        .section-heading .tooltip {
+            display: none;
+            position: absolute;
+            left: 28px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #fff;
+            color: #222;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px #b2f2d7;
+            padding: 8px 14px;
+            font-size: 0.98rem;
+            z-index: 10;
+            min-width: 180px;
+        }
+        .section-heading .info-icon:hover .tooltip {
+            display: block;
+        }
+        .custom-select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1.5px solid #d0e2d8;
+            border-radius: 7px;
+            font-size: 1rem;
+            font-family: inherit;
+            background: #f8f9fa url('data:image/svg+xml;utf8,<svg fill="%234CAF50" height="20" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat right 12px center/18px 18px;
+            appearance: none;
+            transition: border 0.2s, box-shadow 0.2s;
+            box-shadow: 0 1px 4px #b2f2d733;
+        }
+        .custom-select:focus {
+            border: 1.5px solid var(--primary);
+            outline: none;
+            box-shadow: 0 2px 8px #b2f2d7;
+        }
+        .symptom-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 8px;
+        }
+        .chip {
+            background: #eafaf1;
+            color: var(--secondary);
+            border: 1.5px solid var(--primary);
+            border-radius: 20px;
+            padding: 8px 18px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+            user-select: none;
+        }
+        .chip.selected {
+            background: var(--primary);
+            color: #fff;
+            box-shadow: 0 2px 8px #b2f2d7;
+        }
+        .chip:active {
+            transform: scale(0.97);
+        }
+        @media (max-width: 600px) {
+            .profile-section {
+                padding: 14px 2vw 14px 2vw;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">AyurAI</div>
+            <div class="header-center">
+                <nav>
+                    <a href="homepage.html">Home</a>
+                    <a href="dashboard.html">Dashboard</a>
+                    <a href="pres.html">Prescription scan</a>
+                    <a href="index.html">Ayurvedic remedies</a>
+                </nav>
+            </div>
+            <button class="cta-button" onclick="window.location.href='main.html'">Logout</button>
+        </header>
+        <div class="main-centered">
+            <div class="profile-section">
+                <div class="section-heading">
+                    <span>🧬</span>
+                    Select your predominant body type (Prakriti):
+                    <span class="info-icon">&#9432;
+                        <span class="tooltip">Prakriti is your Ayurvedic body constitution (Vata, Pitta, Kapha).</span>
+                    </span>
+                </div>
+                <select id="dosha" class="custom-select">
+                    <option value="">-- Select your Dosha --</option>
+                    <option value="vata">Vata (Air & Space)</option>
+                    <option value="pitta">Pitta (Fire & Water)</option>
+                    <option value="kapha">Kapha (Earth & Water)</option>
+                </select>
+            </div>
+            <div class="profile-section">
+                <div class="section-heading">
+                    <span>🩺</span>
+                    Select your primary health concern:
+                    <span class="info-icon">&#9432;
+                        <span class="tooltip">Choose the main health issue you want Ayurvedic advice for.</span>
+                    </span>
+                </div>
+                <select id="condition" class="custom-select">
+                    <option value="">-- Select condition --</option>
+                    <option value="cold">Common Cold</option>
+                    <option value="cough">Cough</option>
+                    <option value="headache">Headache</option>
+                </select>
+            </div>
+            <div class="profile-section">
+                <div class="section-heading">
+                    <span>💊</span>
+                    Select your symptoms:
+                    <span class="info-icon">&#9432;
+                        <span class="tooltip">Select all symptoms you are experiencing for better recommendations.</span>
+                    </span>
+                </div>
+                <div class="symptom-chips" id="symptoms-container">
+                    <!-- Symptoms will be populated as chips -->
+                </div>
+            </div>
+            <button id="submit-btn">Get Ayurvedic Recommendations</button>
+        </div>
+        <div id="recommendations" class="glass-result" style="display:none; margin-top:32px;">
+            <h2>Your Personalized Ayurvedic Recommendations</h2>
+            <div id="rec-summary" style="font-size:1.1rem; margin-bottom:18px; color:var(--secondary);"></div>
+            <div class="recommendation-section">
+                <button class="rec-toggle" onclick="toggleRecSection('herbal')" aria-expanded="true" style="background:none;border:none;display:flex;align-items:center;font-size:1.1rem;font-weight:600;color:var(--primary);margin-bottom:8px;cursor:pointer;gap:8px;">
+                    <span style="font-size:1.3rem;">🌿</span> Herbal Remedies <span id="herbal-arrow">▼</span>
+                </button>
+                <ul id="herbal-remedies"></ul>
+            </div>
+            <div class="recommendation-section">
+                <button class="rec-toggle" onclick="toggleRecSection('diet')" aria-expanded="true" style="background:none;border:none;display:flex;align-items:center;font-size:1.1rem;font-weight:600;color:var(--primary);margin-bottom:8px;cursor:pointer;gap:8px;">
+                    <span style="font-size:1.3rem;">🥗</span> Dietary Recommendations <span id="diet-arrow">▼</span>
+                </button>
+                <ul id="diet-recommendations"></ul>
+            </div>
+            <div class="recommendation-section">
+                <button class="rec-toggle" onclick="toggleRecSection('lifestyle')" aria-expanded="true" style="background:none;border:none;display:flex;align-items:center;font-size:1.1rem;font-weight:600;color:var(--primary);margin-bottom:8px;cursor:pointer;gap:8px;">
+                    <span style="font-size:1.3rem;">🧘‍♂️</span> Lifestyle Practices <span id="lifestyle-arrow">▼</span>
+                </button>
+                <ul id="lifestyle-recommendations"></ul>
+            </div>
+        </div>
+        <footer>
+            <p>Note: This is a health profile form. For serious or persistent health issues, please consult with a qualified Ayurvedic practitioner or healthcare provider.</p>
+        </footer>
+    </div>
+    <script>
+        // Recommendations data
+        const recommendations = {
+            "cold": {
+                "vata": {
+                    "herbal": [
+                        "Tulsi (Holy Basil) tea with honey and ginger",
+                        "Cinnamon, cardamom, and ginger infusion",
+                        "Sitopaladi powder with honey"
+                    ],
+                    "diet": [
+                        "Warm vegetable soup with garlic and black pepper",
+                        "Avoid cold foods and beverages",
+                        "Include warming spices like cinnamon, cloves, and ginger in meals",
+                        "Stay hydrated with warm water"
+                    ],
+                    "lifestyle": [
+                        "Keep your head and ears covered in cold weather",
+                        "Practice steam inhalation with eucalyptus oil",
+                        "Get adequate rest and sleep",
+                        "Apply sesame oil in nostrils before going out"
+                    ]
+                },
+                "pitta": {
+                    "herbal": [
+                        "Coriander and fennel seed tea",
+                        "Guduchi (Tinospora cordifolia) with honey",
+                        "Sudarshan churna in small doses"
+                    ],
+                    "diet": [
+                        "Light and easily digestible foods like khichdi",
+                        "Coconut water and fresh fruit juices",
+                        "Avoid hot, spicy, and fermented foods",
+                        "Add cooling herbs like mint and coriander to diet"
+                    ],
+                    "lifestyle": [
+                        "Moderate exercise like walking",
+                        "Nasya therapy with cooling oils",
+                        "Avoid exposure to direct sun and heat",
+                        "Practice cooling pranayama techniques"
+                    ]
+                },
+                "kapha": {
+                    "herbal": [
+                        "Dry ginger and black pepper tea",
+                        "Trikatu (three spices) with honey",
+                        "Pippali (long pepper) with honey"
+                    ],
+                    "diet": [
+                        "Light and warm meals with minimal oil",
+                        "Avoid dairy, sugar, and cold foods",
+                        "Add pungent spices like ginger, black pepper, and cloves to food",
+                        "Drink hot water with lemon and honey throughout the day"
+                    ],
+                    "lifestyle": [
+                        "Vigorous exercise to increase circulation",
+                        "Regular dry brushing of the skin",
+                        "Steam inhalation with eucalyptus or camphor",
+                        "Practice kapalabhati pranayama (skull-shining breath)"
+                    ]
+                }
+            },
+            "cough": {
+                "vata": {
+                    "herbal": [
+                        "Licorice and ginger tea with honey",
+                        "Vasa (Adhatoda vasica) leaf decoction",
+                        "Talisadi churna with honey"
+                    ],
+                    "diet": [
+                        "Warm milk with turmeric and ghee before bed",
+                        "Soups with garlic, onion, and black pepper",
+                        "Avoid cold, dry, and raw foods",
+                        "Stay hydrated with warm herbal teas"
+                    ],
+                    "lifestyle": [
+                        "Steam inhalation with eucalyptus oil",
+                        "Apply warm sesame oil on chest and back",
+                        "Practice gentle yoga focusing on chest expansion",
+                        "Maintain warm and humid environment"
+                    ]
+                },
+                "pitta": {
+                    "herbal": [
+                        "Sitopaladi churna with honey",
+                        "Licorice and coriander seed tea",
+                        "Chyawanprash in small amounts"
+                    ],
+                    "diet": [
+                        "Pear or grape juice with a pinch of cardamom",
+                        "Cooling foods like cucumber, watermelon, and pomegranate",
+                        "Avoid hot, spicy, and sour foods",
+                        "Drink room temperature water with honey"
+                    ],
+                    "lifestyle": [
+                        "Gentle pranayama like Sheetali (cooling breath)",
+                        "Apply cooling oils like coconut or aloe vera on chest",
+                        "Avoid hot and humid environments",
+                        "Practice meditation to reduce stress"
+                    ]
+                },
+                "kapha": {
+                    "herbal": [
+                        "Trikatu (three spices) with honey",
+                        "Pippali (long pepper) and ginger tea",
+                        "Kantakari (Solanum xanthocarpum) decoction"
+                    ],
+                    "diet": [
+                        "Honey with black pepper and ginger juice",
+                        "Clear soups with plenty of spices",
+                        "Avoid dairy, sugar, and cold foods",
+                        "Include pungent and bitter vegetables in diet"
+                    ],
+                    "lifestyle": [
+                        "Dry heat application on chest",
+                        "Vigorous exercise to loosen phlegm",
+                        "Sleep with head elevated",
+                        "Regular practice of kapalabhati and bhastrika pranayama"
+                    ]
+                }
+            },
+            "headache": {
+                "vata": {
+                    "herbal": [
+                        "Brahmi (Bacopa monnieri) tea",
+                        "Ashwagandha with warm milk before bed",
+                        "Jatamansi (Nardostachys jatamansi) powder with ghee"
+                    ],
+                    "diet": [
+                        "Warm, nourishing foods like soups and stews",
+                        "Include healthy fats like ghee and sesame oil",
+                        "Avoid caffeine, alcohol, and processed foods",
+                        "Maintain regular meal times"
+                    ],
+                    "lifestyle": [
+                        "Apply warm sesame oil on forehead",
+                        "Regular sleep schedule and adequate rest",
+                        "Shirodhara therapy (oil pouring on forehead)",
+                        "Practice gentle yoga and meditation"
+                    ]
+                },
+                "pitta": {
+                    "herbal": [
+                        "Shatavari (Asparagus racemosus) with aloe vera juice",
+                        "Brahmi and Gotukola tea",
+                        "Amalaki (Indian gooseberry) juice with honey"
+                    ],
+                    "diet": [
+                        "Cooling foods like cucumber, watermelon, and coconut water",
+                        "Avoid hot, spicy, and fermented foods",
+                        "Fresh fruits and vegetables",
+                        "Reduce salt intake"
+                    ],
+                    "lifestyle": [
+                        "Apply sandalwood paste or aloe vera gel on forehead",
+                        "Avoid exposure to direct sunlight",
+                        "Practice cooling pranayama like Sheetali",
+                        "Moonlight walking meditation"
+                    ]
+                },
+                "kapha": {
+                    "herbal": [
+                        "Ginger and cinnamon tea",
+                        "Tulsi (Holy Basil) and black pepper infusion",
+                        "Trikatu (three spices) with honey"
+                    ],
+                    "diet": [
+                        "Light and dry foods with minimal oil",
+                        "Include pungent spices in meals",
+                        "Avoid dairy, sugar, and cold foods",
+                        "Drink warm water with lemon throughout the day"
+                    ],
+                    "lifestyle": [
+                        "Regular exercise, especially in the morning",
+                        "Nasya therapy with warming oils",
+                        "Apply mustard oil or ginger paste on forehead",
+                        "Practice stimulating pranayama like Bhastrika"
+                    ]
+                }
+            }
+        };
+        // Existing chips logic
+        const symptomsByCondition = {
+            "cold": [
+                "Runny nose", "Nasal congestion", "Sneezing", "Sore throat", "Mild fever", "Body aches"
+            ],
+            "cough": [
+                "Dry cough", "Wet cough with phlegm", "Chest congestion", "Sore throat", "Wheezing", "Difficulty breathing"
+            ],
+            "headache": [
+                "Throbbing pain", "Pressure around temples", "Sensitivity to light", "Nausea", "Pain on one side", "Tension in neck"
+            ]
+        };
+        const conditionSelect = document.getElementById('condition');
+        const symptomsContainer = document.getElementById('symptoms-container');
+        conditionSelect.addEventListener('change', function() {
+            symptomsContainer.innerHTML = '';
+            const selectedCondition = this.value;
+            if (!selectedCondition) return;
+            symptomsByCondition[selectedCondition].forEach(symptom => {
+                const chip = document.createElement('div');
+                chip.className = 'chip';
+                chip.textContent = symptom;
+                chip.onclick = () => chip.classList.toggle('selected');
+                symptomsContainer.appendChild(chip);
+            });
+        });
+        // Submit button logic
+        document.getElementById('submit-btn').onclick = function() {
+            // Always show the same set of recommendations
+            const herbal = [
+                "Tulsi (Holy Basil) tea with honey and ginger",
+                "Licorice and ginger tea with honey",
+                "Brahmi (Bacopa monnieri) tea"
+            ];
+            const diet = [
+                "Warm vegetable soup with garlic and black pepper",
+                "Pear or grape juice with a pinch of cardamom",
+                "Cooling foods like cucumber, watermelon, and coconut water"
+            ];
+            const lifestyle = [
+                "Practice steam inhalation with eucalyptus oil",
+                "Regular sleep schedule and adequate rest",
+                "Gentle yoga focusing on chest expansion"
+            ];
+            document.getElementById('herbal-remedies').innerHTML = herbal.map(item => `<li>${item}</li>`).join('');
+            document.getElementById('diet-recommendations').innerHTML = diet.map(item => `<li>${item}</li>`).join('');
+            document.getElementById('lifestyle-recommendations').innerHTML = lifestyle.map(item => `<li>${item}</li>`).join('');
+            document.getElementById('rec-summary').innerHTML = `Here are some Ayurvedic recommendations for you!`;
+            document.getElementById('recommendations').style.display = 'block';
+        };
+        function toggleRecSection(type) {
+            const ul = document.getElementById(type+'-recommendations');
+            const arrow = document.getElementById(type+'-arrow');
+            if (ul.style.display === 'none') {
+                ul.style.display = '';
+                arrow.textContent = '▼';
+            } else {
+                ul.style.display = 'none';
+                arrow.textContent = '►';
+            }
+        }
+        // Add 'active' class to the current page link
+        document.addEventListener('DOMContentLoaded', function() {
+            var path = window.location.pathname.split('/').pop();
+            document.querySelectorAll('nav a').forEach(function(link) {
+                if(link.getAttribute('href') === path) {
+                    link.classList.add('active');
+                    link.setAttribute('aria-current', 'page');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

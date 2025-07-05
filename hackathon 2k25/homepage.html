@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ayur AI Health</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --porcelain: #F7F7F8;
+            --primary: #4CAF50;
+            --secondary: #2D6A4F;
+            --text: #222;
+            --card: #fff;
+            --shadow: 0 4px 16px rgba(44,62,80,0.07);
+        }
+        html, body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', Arial, sans-serif;
+            background: var(--porcelain);
+            color: var(--text);
+        }
+        header {
+            background: var(--card);
+            box-shadow: var(--shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 48px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--primary);
+        }
+        nav a {
+            text-decoration: none;
+            color: var(--text);
+            margin: 0 18px;
+            font-weight: 500;
+            font-size: 1.1rem;
+            transition: color 0.2s;
+        }
+        nav a:hover {
+            color: var(--primary);
+        }
+        .cta-button {
+            background: var(--primary);
+            color: #fff;
+            padding: 10px 32px;
+            border: none;
+            border-radius: 24px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .cta-button:hover {
+            background: var(--secondary);
+        }
+        .hero-section {
+            width: 100%;
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+            background: linear-gradient(135deg, #B2F2D7 0%, #7ED9A7 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            transform: translateX(-50%);
+            width: 120vw;
+            height: 100%;
+            background: radial-gradient(circle at 60% 40%, #B7EFC5 0%, transparent 70%);
+            z-index: 0;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 700px;
+            font-family: 'Montserrat', Arial, sans-serif;
+        }
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 18px;
+            color: var(--secondary);
+            letter-spacing: 1px;
+        }
+        .hero-text {
+            font-size: 1.4rem;
+            color: var(--text);
+            margin-bottom: 32px;
+            font-weight: 400;
+        }
+        .features-section {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin: 48px 0 0 0;
+            flex-wrap: wrap;
+        }
+        .feature-card {
+            background: var(--card);
+            box-shadow: var(--shadow);
+            border-radius: 18px;
+            padding: 32px 28px;
+            width: 300px;
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .feature-card:hover {
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 8px 32px rgba(44,62,80,0.13);
+        }
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 18px;
+            color: var(--primary);
+        }
+        .feature-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .feature-desc {
+            font-size: 1rem;
+            color: #555;
+        }
+        @media (max-width: 900px) {
+            .features-section {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+        @media (max-width: 600px) {
+            header {
+                flex-direction: column;
+                padding: 12px 8px;
+            }
+            .features-section {
+                gap: 18px;
+            }
+            .feature-card {
+                width: 90vw;
+                padding: 24px 10px;
+            }
+            .hero-title {
+                font-size: 2.1rem;
+            }
+            .hero-text {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">AyurAI</div>
+        <nav>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="pres.html">Prescription scan</a>
+            <a href="index.html">Ayurvedic remedies</a>
+        </nav>
+        <button class="cta-button" onclick="window.location.href='main.html'">Logout</button>
+    </header>
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">SCAN. FIND. HEAL.</h1>
+            <p class="hero-text">Your one-stop platform to scan prescriptions, find nearby medicines, and explore natural Ayurvedic remedies. Experience the future of health, today.</p>
+            <button class="cta-button" onclick="window.location.href='index.html'">Get Started</button>
+        </div>
+    </section>
+    <section class="features-section">
+        <div class="feature-card">
+            <div class="feature-icon">📷</div>
+            <div class="feature-title">Scan Prescription</div>
+            <div class="feature-desc">Upload your prescription and let our AI read and analyze your needs instantly.</div>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">💊</div>
+            <div class="feature-title">Find Medicines</div>
+            <div class="feature-desc">Discover pharmacies near you with the medicines you need, plus exclusive discounts.</div>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🌿</div>
+            <div class="feature-title">Explore Remedies</div>
+            <div class="feature-desc">Access a curated library of natural Ayurvedic remedies for holistic wellness.</div>
+        </div>
+    </section>
+    <!-- How It Works Section -->
+    <section class="how-it-works-section">
+        <h2 class="section-title">How It Works</h2>
+        <div class="steps-container">
+            <div class="step-card">
+                <div class="step-icon">📷</div>
+                <div class="step-title">1. Scan Prescription</div>
+                <div class="step-desc">Upload your prescription for instant AI analysis.</div>
+            </div>
+            <div class="step-card">
+                <div class="step-icon">🔍</div>
+                <div class="step-title">2. Find Medicines</div>
+                <div class="step-desc">Get a list of nearby pharmacies with your medicines in stock.</div>
+            </div>
+            <div class="step-card">
+                <div class="step-icon">🌿</div>
+                <div class="step-title">3. Explore Remedies</div>
+                <div class="step-desc">Discover natural Ayurvedic alternatives and wellness tips.</div>
+            </div>
+            <div class="step-card">
+                <div class="step-icon">💬</div>
+                <div class="step-title">4. Get Support</div>
+                <div class="step-desc">Chat with our AI assistant for any help or questions.</div>
+            </div>
+        </div>
+    </section>
+    <!-- Animated Stats Section -->
+    <section class="stats-section">
+        <div class="stat-card">
+            <div class="stat-number" id="stat-prescriptions">0</div>
+            <div class="stat-label">Prescriptions Scanned</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="stat-remedies">0</div>
+            <div class="stat-label">Remedies Suggested</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="stat-users">0</div>
+            <div class="stat-label">Happy Users</div>
+        </div>
+    </section>
+    <!-- Testimonials Section -->
+    <section class="testimonials-section">
+        <h2 class="section-title">What Our Users Say</h2>
+        <div class="testimonials-container">
+            <div class="testimonial-card">
+                <div class="testimonial-text">“This platform made it so easy to get my medicines and learn about natural remedies!”</div>
+                <div class="testimonial-user">- Priya S.</div>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-text">“The prescription scan is super fast and accurate. Highly recommended!”</div>
+                <div class="testimonial-user">- Rahul M.</div>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-text">“I love the Ayurvedic tips and the support chat. Great experience!”</div>
+                <div class="testimonial-user">- Anjali K.</div>
+            </div>
+        </div>
+    </section>
+    <!-- FAQ Section -->
+    <section class="faq-section">
+        <h2 class="section-title">Frequently Asked Questions</h2>
+        <div class="faq-container">
+            <div class="faq-item">
+                <div class="faq-question">How do I scan my prescription?</div>
+                <div class="faq-answer">Click on 'Scan Prescription', upload your image, and our AI will analyze it instantly.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">Is my data secure?</div>
+                <div class="faq-answer">Yes, we use advanced encryption and never share your data without consent.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">Can I get Ayurvedic alternatives?</div>
+                <div class="faq-answer">Absolutely! We suggest natural remedies alongside conventional medicines.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">How do I contact support?</div>
+                <div class="faq-answer">Use the chat assistant or email us at support@ayuraihealth.com.</div>
+            </div>
+        </div>
+    </section>
+    <!-- Footer Section -->
+    <footer class="footer">
+        <div class="footer-content">
+            <span>© 2024 AyurAI. All rights reserved.</span>
+            <span class="footer-links">
+                <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a>
+            </span>
+        </div>
+    </footer>
+    <button id="backToTop" title="Back to top">↑</button>
+    <script>
+    // 1. Animated Section Entrances
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('in-view');
+            }
+        });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('section, .testimonials-section, .faq-section, .stats-section').forEach(sec => {
+        sec.classList.add('fade-section');
+        observer.observe(sec);
+    });
+
+    // 2. FAQ Accordion
+    document.querySelectorAll('.faq-question').forEach(q => {
+        q.addEventListener('click', function() {
+            const answer = this.nextElementSibling;
+            answer.classList.toggle('open');
+            this.classList.toggle('open');
+        });
+    });
+
+    // 3. Testimonials Carousel
+    const testimonials = document.querySelectorAll('.testimonial-card');
+    let currentTestimonial = 0;
+    function showTestimonial(idx) {
+        testimonials.forEach((t, i) => t.style.display = i === idx ? 'block' : 'none');
+    }
+    if (testimonials.length > 1) {
+        showTestimonial(0);
+        setInterval(() => {
+            currentTestimonial = (currentTestimonial + 1) % testimonials.length;
+            showTestimonial(currentTestimonial);
+        }, 4000);
+    }
+
+    // 4. Improved Animated Counters (trigger on scroll)
+    let statsAnimated = false;
+    function animateStat(id, end, duration) {
+        let start = 0;
+        const step = Math.ceil(end / (duration / 20));
+        const el = document.getElementById(id);
+        const interval = setInterval(() => {
+            start += step;
+            if (start >= end) {
+                el.textContent = end;
+                clearInterval(interval);
+            } else {
+                el.textContent = start;
+            }
+        }, 20);
+    }
+    function triggerStats() {
+        if (!statsAnimated) {
+            animateStat('stat-prescriptions', 1200, 1200);
+            animateStat('stat-remedies', 850, 1200);
+            animateStat('stat-users', 500, 1200);
+            statsAnimated = true;
+        }
+    }
+    const statsSection = document.querySelector('.stats-section');
+    window.addEventListener('scroll', () => {
+        const rect = statsSection.getBoundingClientRect();
+        if (rect.top < window.innerHeight && rect.bottom > 0) {
+            triggerStats();
+        }
+    });
+
+    // 5. Smooth Scrolling for Nav Links
+    document.querySelectorAll('a[href^="#"]').forEach(link => {
+        link.addEventListener('click', function(e) {
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                e.preventDefault();
+                target.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    });
+
+    // 6. Back to Top Button
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 400) {
+            backToTop.style.display = 'block';
+        } else {
+            backToTop.style.display = 'none';
+        }
+    });
+    backToTop.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    // 7. Hover Effects are already present in CSS for cards/buttons
+    </script>
+    <style>
+    .section-title {
+        text-align: center;
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 60px 0 32px 0;
+        color: var(--secondary);
+    }
+    /* How It Works */
+    .how-it-works-section {
+        background: var(--porcelain);
+        padding-bottom: 32px;
+    }
+    .steps-container {
+        display: flex;
+        justify-content: center;
+        gap: 32px;
+        flex-wrap: wrap;
+    }
+    .step-card {
+        background: var(--card);
+        box-shadow: var(--shadow);
+        border-radius: 16px;
+        padding: 28px 22px;
+        width: 220px;
+        text-align: center;
+        margin-bottom: 18px;
+    }
+    .step-icon {
+        font-size: 2.2rem;
+        margin-bottom: 12px;
+    }
+    .step-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 6px;
+    }
+    .step-desc {
+        font-size: 0.98rem;
+        color: #555;
+    }
+    /* Stats */
+    .stats-section {
+        display: flex;
+        justify-content: center;
+        gap: 48px;
+        background: #f2f8f4;
+        padding: 36px 0 18px 0;
+    }
+    .stat-card {
+        text-align: center;
+    }
+    .stat-number {
+        font-size: 2.3rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 6px;
+    }
+    .stat-label {
+        font-size: 1.1rem;
+        color: #444;
+    }
+    /* Testimonials */
+    .testimonials-section {
+        background: var(--porcelain);
+        padding: 48px 0 32px 0;
+    }
+    .testimonials-container {
+        display: flex;
+        justify-content: center;
+        gap: 32px;
+        flex-wrap: wrap;
+    }
+    .testimonial-card {
+        background: var(--card);
+        box-shadow: var(--shadow);
+        border-radius: 16px;
+        padding: 28px 22px;
+        width: 320px;
+        text-align: center;
+        font-size: 1.08rem;
+        margin-bottom: 18px;
+    }
+    .testimonial-text {
+        font-style: italic;
+        margin-bottom: 10px;
+    }
+    .testimonial-user {
+        font-weight: 600;
+        color: var(--secondary);
+    }
+    /* FAQ */
+    .faq-section {
+        background: #f2f8f4;
+        padding: 48px 0 32px 0;
+    }
+    .faq-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    .faq-item {
+        background: var(--card);
+        box-shadow: var(--shadow);
+        border-radius: 12px;
+        margin-bottom: 18px;
+        padding: 18px 22px;
+    }
+    .faq-question {
+        font-weight: 600;
+        margin-bottom: 6px;
+        color: var(--primary);
+    }
+    .faq-answer {
+        color: #444;
+        font-size: 1rem;
+    }
+    /* Footer */
+    .footer {
+        background: var(--secondary);
+        color: #fff;
+        padding: 18px 0;
+        text-align: center;
+    }
+    .footer-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+    }
+    .footer-links a {
+        color: #fff;
+        text-decoration: underline;
+        margin: 0 6px;
+        font-size: 0.98rem;
+    }
+    .footer-links a:hover {
+        color: #B7EFC5;
+    }
+    @media (max-width: 900px) {
+        .steps-container, .testimonials-container, .stats-section {
+            flex-direction: column;
+            align-items: center;
+            gap: 18px;
+        }
+    }
+    /* Animated Section Entrances */
+    .fade-section { opacity: 0; transform: translateY(40px); transition: all 0.7s cubic-bezier(.4,0,.2,1); }
+    .fade-section.in-view { opacity: 1; transform: none; }
+    /* FAQ Accordion */
+    .faq-question { cursor: pointer; position: relative; }
+    .faq-question::after { content: '▼'; position: absolute; right: 0; transition: transform 0.3s; }
+    .faq-question.open::after { transform: rotate(-180deg); }
+    .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.4s, padding 0.4s; padding: 0 0; }
+    .faq-answer.open { max-height: 200px; padding: 8px 0 0 0; }
+    /* Testimonials Carousel */
+    .testimonials-container { position: relative; min-height: 160px; }
+    .testimonial-card { display: none; animation: fadeIn 0.7s; }
+    .testimonial-card:first-child { display: block; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    /* Back to Top Button */
+    #backToTop {
+        display: none;
+        position: fixed;
+        bottom: 32px;
+        right: 32px;
+        z-index: 100;
+        background: var(--primary);
+        color: #fff;
+        border: none;
+        border-radius: 50%;
+        width: 48px;
+        height: 48px;
+        font-size: 1.7rem;
+        box-shadow: 0 2px 8px rgba(44,62,80,0.18);
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+    #backToTop:hover { background: var(--secondary); }
+    </style>
+</body>
+</html>
+
